@@ -8,6 +8,15 @@ axios({
   }
 })
 
+// 默认嵌套数组解析为 ['bar','wayne','baz']
+axios({
+  method: 'get',
+  url: '/base/get',
+  params: {
+    foo: [['bar', 'wayne'], 'baz']
+  }
+})
+
 axios({
   method: 'get',
   url: '/base/get',

@@ -1,6 +1,7 @@
 // 存放解析url的工具方法
 
 import { encode, isDate, isPlainObject } from './util'
+import _ from 'lodash'
 
 export function buildUrl(url: string, params?: any): string {
   if (!params) return url
@@ -10,13 +11,12 @@ export function buildUrl(url: string, params?: any): string {
     if (val === null || typeof val === 'undefined') return
     let values: string[] = []
     if (Array.isArray(val)) {
-      values = val
+      values = _.flattenDeep(val)
       key += '[]'
     } else {
       values = [val]
     }
     values.forEach(val => {
-      // 嵌套array的情况？
       if (isDate(val)) {
         val = val.toISOString()
       } else if (isPlainObject(val)) {

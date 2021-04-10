@@ -22,4 +22,5 @@ export type AxiosRequestConfig = {
   data?: any
   // get
   params?: any
+  headers?: any
 }

@@ -22,6 +22,8 @@ export type AxiosRequestConfig = {
   params?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
+  // default 0 -- never timeout
+  timeout?: number
 }
 
 export type AxiosResponse = {

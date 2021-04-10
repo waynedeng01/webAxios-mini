@@ -4,12 +4,32 @@ import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from './types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { method = 'get', url, data = null, headers = {}, responseType = 'text' } = config
+    const {
+      method = 'get',
+      url,
+      data = null,
+      headers = {},
+      responseType = 'text',
+      timeout
+    } = config
     const request = new XMLHttpRequest()
     request.open(method, url)
     if (responseType) {
       request.responseType = responseType
     }
+
+    // only called if there's an error at the network level.
+    request.onerror = function() {
+      reject(new Error('Network Error!!!'))
+    }
+    // reject timeout
+    if (timeout) {
+      request.timeout = timeout
+    }
+    request.ontimeout = function() {
+      reject(new Error(`Timeout Error: ${timeout}ms`))
+    }
+
     request.onreadystatechange = function() {
       if (request.readyState === XMLHttpRequest.DONE) {
         const status = request.status
@@ -27,6 +47,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           }
           resolve(response)
         } else {
+          reject(new Error(`Request failed with status code ${request.status}`))
         }
       }
     }

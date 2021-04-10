@@ -18,9 +18,19 @@ export type Method =
 export type AxiosRequestConfig = {
   url: string
   method?: Method
-  // post/patch 等
   data?: any
-  // get
   params?: any
   headers?: any
+  responseType?: XMLHttpRequestResponseType
 }
+
+export type AxiosResponse = {
+  data: any
+  status: number
+  statusText: string
+  headers: any
+  config: AxiosRequestConfig
+  request: any
+}
+
+export interface AxiosPromise extends Promise<AxiosResponse> {}

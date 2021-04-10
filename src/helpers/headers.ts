@@ -1,12 +1,9 @@
-// 有 data 无 headers的 请求添加headers
-// 无 data 有 headers的 请求去掉headers
-
 import { isPlainObject } from './util'
 
 export function normalizeHeaderName(headers: any, normalizeName: string): void {
   if (!headers) return
   Object.keys(headers).forEach(key => {
-    if (key !== normalizeName && key.toUpperCase() === normalizeName) {
+    if (key !== normalizeName && key.toUpperCase() === normalizeName.toUpperCase()) {
       headers[normalizeName] = headers[key]
       delete headers[key]
     }
@@ -21,4 +18,21 @@ export function processHeaders(headers: any, data: any): any {
     }
   }
   return headers
+}
+
+// parse string to object
+export function transformResponseHeaders(headers: string): any {
+  const parsed = Object.create(null)
+  if (!headers) return parsed
+  headers.split('\n').forEach(line => {
+    const [k, v] = line.split(':')
+    // "" at last
+    if (!k) {
+      return
+    }
+    if (v) {
+      parsed[`${k.trim().toUpperCase()}`] = v.trim()
+    }
+  })
+  return parsed
 }

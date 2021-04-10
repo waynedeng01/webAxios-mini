@@ -78,6 +78,9 @@ axios({
     a: 1,
     b: 2
   }
+  // responseType: 'arraybuffer'
+}).then(res => {
+  console.log(res)
 })
 
 const arr = new Int32Array([21, 31])
@@ -86,4 +89,7 @@ axios({
   method: 'post',
   url: '/base/buffer',
   data: arr
+  // responseType: 'json'
+}).then(res => {
+  console.log(res)
 })

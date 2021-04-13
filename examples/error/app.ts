@@ -1,3 +1,4 @@
+import { AxiosError } from '../../src/helpers/error'
 import axios from '../../src/index'
 
 axios({
@@ -43,6 +44,6 @@ axios({
   .then(res => {
     console.log(res)
   })
-  .catch(e => {
-    console.log(e.message)
+  .catch((e: AxiosError) => {
+    console.log(e)
   })

@@ -14,7 +14,6 @@ export type Method =
   | 'patch'
   | 'PATCH'
 
-// 支持传入的请求配置
 export type AxiosRequestConfig = {
   url: string
   method?: Method
@@ -33,6 +32,14 @@ export type AxiosResponse = {
   headers: any
   config: AxiosRequestConfig
   request: any
+}
+
+export interface AxiosError extends Error {
+  config: AxiosRequestConfig
+  code?: string
+  request?: any
+  response?: AxiosResponse
+  isAxiosError: boolean
 }
 
 export interface AxiosPromise extends Promise<AxiosResponse> {}

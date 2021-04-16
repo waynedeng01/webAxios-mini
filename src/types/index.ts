@@ -45,6 +45,7 @@ export interface AxiosError extends Error {
 export interface AxiosPromise extends Promise<AxiosResponse> {}
 
 export interface Axios {
+  // 支持 (url,config) 的调用方式 以及 (config)的调用方式
   request(config: AxiosRequestConfig): AxiosPromise
 
   get(url: string, config?: AxiosRequestConfig): AxiosPromise
@@ -64,5 +65,5 @@ export interface Axios {
 
 // 本身为一个function，同时原型上有Axios上的method
 export interface AxiosInstance extends Axios {
-  (config: AxiosRequestConfig): AxiosPromise
+  (url: any, config?: AxiosRequestConfig): AxiosPromise
 }

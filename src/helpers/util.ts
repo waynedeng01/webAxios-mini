@@ -19,3 +19,12 @@ export function encode(val: string): string {
     .replace(/%5B/gi, '[')
     .replace(/%5D/gi, ']')
 }
+
+// 混合对象
+export function extend<T, U>(to: T, from: U): T & U {
+  // for...in 取到原型上的数据一同扩展
+  for (const key in from) {
+    (to as T & U)[key] = from[key] as any
+  }
+  return to as T & U
+}

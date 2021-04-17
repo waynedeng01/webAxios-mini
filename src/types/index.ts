@@ -1,3 +1,5 @@
+import { InterceptorManager } from '../core/InterceptorManager'
+
 export type Method =
   | 'get'
   | 'GET'
@@ -45,7 +47,12 @@ export type AxiosResponse<T = any> = {
 export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {
 }
 
+// 对外暴露的接口类型
 export interface Axios {
+  interceptors: {
+    req: InterceptorManager<AxiosRequestConfig>
+    res: InterceptorManager<AxiosResponse>
+  }
   // 支持 (url,config) 的调用方式 以及 (config)的调用方式
   request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
@@ -64,7 +71,30 @@ export interface Axios {
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
-// 本身为一个function，同时原型上有Axios上的method
 export interface AxiosInstance extends Axios {
   <T = any>(url: any, config?: AxiosRequestConfig): AxiosPromise<T>
+}
+
+// -- interceptor
+
+export interface Interceptor<T> {
+  resolved: ResolvedFn<T>
+  rejected?: RejectedFn
+}
+
+export interface DioInterceptorManager<T> {
+  // both sync and async
+  add(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
+
+  delete(id: number): void
+
+  // forEach(cb: ((interceptor: Interceptor<T>) => void)): void
+}
+
+export interface ResolvedFn<T = any> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (error: any): any
 }

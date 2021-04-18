@@ -17,6 +17,7 @@ export type Method =
   | 'PATCH'
 
 export type AxiosRequestConfig = {
+  [index: string]: any
   url?: string // api support
   method?: Method
   data?: any
@@ -49,6 +50,7 @@ export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {
 
 // 对外暴露的接口类型
 export interface Axios {
+  defaults: AxiosRequestConfig
   interceptors: {
     req: InterceptorManager<AxiosRequestConfig>
     res: InterceptorManager<AxiosResponse>

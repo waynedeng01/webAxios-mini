@@ -16,8 +16,13 @@ export type Method =
   | 'patch'
   | 'PATCH'
 
+export type TransformFn = {
+  (data: any, headers?: any): any
+}
+
 export type AxiosRequestConfig = {
-  [index: string]: any
+  transformRequest?: TransformFn | TransformFn[]
+  transformResponse?: TransformFn | TransformFn[]
   url?: string // api support
   method?: Method
   data?: any
@@ -26,6 +31,7 @@ export type AxiosRequestConfig = {
   responseType?: XMLHttpRequestResponseType
   // default 0 -- never timeout
   timeout?: number
+  [index: string]: any
 }
 
 export type AxiosResponse<T = any> = {
@@ -45,8 +51,7 @@ export type AxiosResponse<T = any> = {
 //   isAxiosError: boolean
 // }
 
-export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {
-}
+export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
 // 对外暴露的接口类型
 export interface Axios {
@@ -74,7 +79,10 @@ export interface Axios {
 }
 
 export interface AxiosInstance extends Axios {
-  <T = any>(url: any, config?: AxiosRequestConfig): AxiosPromise<T>
+  // use function overload for TS check
+  <T = any>(config: AxiosRequestConfig): AxiosPromise<T>
+
+  <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
 // -- interceptor

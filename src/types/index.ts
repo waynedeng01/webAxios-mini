@@ -21,6 +21,7 @@ export type TransformFn = {
 }
 
 export type AxiosRequestConfig = {
+  withCredentials?: boolean
   transformRequest?: TransformFn | TransformFn[]
   transformResponse?: TransformFn | TransformFn[]
   url?: string // api support

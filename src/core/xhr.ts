@@ -11,9 +11,15 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       data = null,
       headers = {},
       responseType = 'text',
-      timeout
+      timeout,
+      withCredentials
     } = config
     const request = new XMLHttpRequest()
+
+    if (withCredentials) {
+      request.withCredentials = withCredentials
+    }
+
     request.open(method, url!, true)
     if (responseType) {
       request.responseType = responseType

@@ -12,12 +12,23 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       headers = {},
       responseType = 'text',
       timeout,
-      withCredentials
+      withCredentials,
+      cancelToken
     } = config
     const request = new XMLHttpRequest()
 
     if (withCredentials) {
       request.withCredentials = withCredentials
+    }
+
+    if (cancelToken) {
+      // setting a pending promise
+      // when exec() called
+      // promise resolved 之后自动执行内部逻辑
+      cancelToken.promise.then(reason => {
+        request.abort()
+        reject(reason)
+      })
     }
 
     request.open(method, url!, true)

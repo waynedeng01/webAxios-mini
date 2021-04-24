@@ -6,6 +6,7 @@ import { transform } from './transform'
 
 // 取代之前webAxios函数的功能 将其升级为混合对象
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  throwIfCancellationRequested(config)
   processConfig(config)
   return xhr(config).then(
     res => {
@@ -34,4 +35,10 @@ function processConfig(config: AxiosRequestConfig) {
 function transformResponse(res: AxiosResponse): AxiosResponse {
   res.data = transform(res.data, res.headers, res.config.transformResponse)
   return res
+}
+
+function throwIfCancellationRequested(config: AxiosRequestConfig): void {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested()
+  }
 }

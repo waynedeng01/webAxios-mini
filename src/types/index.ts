@@ -62,7 +62,16 @@ export interface AxiosStatic extends AxiosInstance {
   isCancel: (value: any) => boolean
 }
 
+export type AxiosBasicCredentials = {
+  username: string
+  password: string
+}
+
 export type AxiosRequestConfig = {
+  baseURL?: string
+  paramsSerializer?: (params: any) => string
+  validStatus?: (status: number) => boolean
+  auth?: AxiosBasicCredentials
   xsrfCookieName?: string
   xsrfHeaderName?: string
   onDownloadProgress?: (e: ProgressEvent) => void

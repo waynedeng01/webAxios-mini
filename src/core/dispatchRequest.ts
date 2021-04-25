@@ -1,7 +1,7 @@
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 import xhr from './xhr'
 import { flattenHeaders } from '../helpers/headers'
-import { buildUrl } from '../helpers/url'
+import { buildUrl, combineURL, isAbsoluteURL } from '../helpers/url'
 import { transform } from './transform'
 
 // 取代之前webAxios函数的功能 将其升级为混合对象
@@ -22,8 +22,12 @@ export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromis
 }
 
 function transformURL(config: AxiosRequestConfig): string {
-  const { url, params } = config
-  return buildUrl(url!, params)
+  let { url, params, paramsSerializer, baseURL } = config
+  if (baseURL && !isAbsoluteURL(url!)) {
+    url = combineURL(baseURL, url)
+  }
+
+  return buildUrl(url!, params, paramsSerializer)
 }
 
 function processConfig(config: AxiosRequestConfig) {

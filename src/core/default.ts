@@ -5,6 +5,9 @@ import { AxiosRequestConfig } from '../types'
 const methodsNoData = ['delete', 'get', 'head', 'options']
 const methodsWithData = ['post', 'put', 'patch']
 const defaults: AxiosRequestConfig = {
+  validStatus: (status: number) => {
+    return status >= 200 && status < 400
+  },
   xsrfCookieName: 'XSRF-TOKEN',
   xsrfHeaderName: 'X-XSRF-TOKEN',
   transformRequest: [

@@ -20,7 +20,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       xsrfCookieName,
       xsrfHeaderName,
       onDownloadProgress,
-      onUploadProgress
+      onUploadProgress,
+      auth,
+      validStatus
     } = config
     const request = new XMLHttpRequest()
     request.open(method, url!, true)
@@ -58,7 +60,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         const status = request.status
         if (status === 0) return
         if (request.readyState !== XMLHttpRequest.DONE) return
-        if (status >= 200 && status < 400) {
+        if (!validStatus || validStatus(status)) {
           const responseHeaders = request.getAllResponseHeaders()
           const response: AxiosResponse = {
             data: parseResponseData(
@@ -94,6 +96,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       // 交由浏览器自己设定Content-Type
       if (isFormData(data)) {
         delete headers['Content-Type']
+      }
+      // auth
+      if (auth) {
+        const { username, password } = auth
+        headers['Authorization'] = 'Basic ' + btoa(username + ':' + password)
       }
       // 同源或跨域携带cookie的请求
       if ((isSameOrigin(url!) || withCredentials) && xsrfCookieName) {

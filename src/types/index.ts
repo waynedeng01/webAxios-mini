@@ -65,6 +65,8 @@ export interface AxiosStatic extends AxiosInstance {
 export type AxiosRequestConfig = {
   xsrfCookieName?: string
   xsrfHeaderName?: string
+  onDownloadProgress?: (e: ProgressEvent) => void
+  onUploadProgress?: (e: ProgressEvent) => void
   cancelToken?: CancelToken
   withCredentials?: boolean
   transformRequest?: TransformFn | TransformFn[]

@@ -8,6 +8,10 @@ export function isPlainObject(val: any): boolean {
   return toString.call(val) === '[object Object]'
 }
 
+export function isFormData(val: any): boolean {
+  return typeof val !== 'undefined' && val instanceof FormData
+}
+
 // 保留关键字
 export function encode(val: string): string {
   return encodeURIComponent(val)
@@ -24,7 +28,7 @@ export function encode(val: string): string {
 export function extend<T, U>(to: T, from: U): T & U {
   // for...in 取到原型上的数据一同扩展
   for (const key in from) {
-    (to as T & U)[key] = from[key] as any
+    ;(to as T & U)[key] = from[key] as any
   }
   return to as T & U
 }

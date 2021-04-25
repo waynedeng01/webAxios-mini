@@ -3,6 +3,7 @@ import { parseResponseData } from '../helpers/data'
 import { createError } from '../helpers/error'
 import { transformResponseHeaders } from '../helpers/headers'
 import { isSameOrigin } from '../helpers/url'
+import { isFormData } from '../helpers/util'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -17,9 +18,16 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       withCredentials,
       cancelToken,
       xsrfCookieName,
-      xsrfHeaderName
+      xsrfHeaderName,
+      onDownloadProgress,
+      onUploadProgress
     } = config
     const request = new XMLHttpRequest()
+
+    // 交由浏览器自己设定Content-Type
+    if (isFormData(data)) {
+      delete headers['Content-Type']
+    }
 
     if (withCredentials) {
       request.withCredentials = withCredentials
@@ -77,6 +85,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           createError(`Request failed with status code ${request.status}`, config, null, request)
         )
       }
+    }
+
+    if (onDownloadProgress) {
+      request.onprogress = onDownloadProgress
+    }
+    if (onUploadProgress) {
+      request.upload.onprogress = onUploadProgress
     }
 
     // reject timeout

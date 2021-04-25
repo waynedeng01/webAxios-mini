@@ -1,6 +1,8 @@
+import cookie from '../helpers/cookie'
 import { parseResponseData } from '../helpers/data'
 import { createError } from '../helpers/error'
 import { transformResponseHeaders } from '../helpers/headers'
+import { isSameOrigin } from '../helpers/url'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -13,12 +15,22 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       responseType = 'text',
       timeout,
       withCredentials,
-      cancelToken
+      cancelToken,
+      xsrfCookieName,
+      xsrfHeaderName
     } = config
     const request = new XMLHttpRequest()
 
     if (withCredentials) {
       request.withCredentials = withCredentials
+    }
+
+    // 同源或跨域携带cookie的请求
+    if ((isSameOrigin(url!) || withCredentials) && xsrfCookieName) {
+      const cookieVal = cookie.read(xsrfCookieName)
+      if (cookieVal) {
+        headers[xsrfHeaderName!] = cookieVal
+      }
     }
 
     if (cancelToken) {

@@ -63,6 +63,8 @@ export interface AxiosStatic extends AxiosInstance {
 }
 
 export type AxiosRequestConfig = {
+  xsrfCookieName?: string
+  xsrfHeaderName?: string
   cancelToken?: CancelToken
   withCredentials?: boolean
   transformRequest?: TransformFn | TransformFn[]
@@ -73,7 +75,6 @@ export type AxiosRequestConfig = {
   params?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
-  // default 0 -- never timeout
   timeout?: number
   [index: string]: any
 }
@@ -155,4 +156,10 @@ export interface ResolvedFn<T = any> {
 
 export interface RejectedFn {
   (error: any): any
+}
+
+// xsrf
+export interface resolvedUrl {
+  protocol: string
+  host: string
 }

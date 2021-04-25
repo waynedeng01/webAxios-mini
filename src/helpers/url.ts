@@ -2,6 +2,7 @@
 
 import { encode, isDate, isPlainObject } from './util'
 import _ from 'lodash'
+import { resolvedUrl } from '../types'
 
 export function buildUrl(url: string, params?: any): string {
   if (!params) return url
@@ -36,4 +37,25 @@ export function buildUrl(url: string, params?: any): string {
     url += serelizedParams
   }
   return url
+}
+
+// xsrf
+const currentUrl = window.location.href
+
+export function isSameOrigin(url: string): boolean {
+  const parsedOrigin = resolveUrl(url)
+  const currentOrigin = resolveUrl(currentUrl)
+  return (
+    currentOrigin.protocol === parsedOrigin.protocol && currentOrigin.host === parsedOrigin.host
+  )
+}
+
+export function resolveUrl(url: string): resolvedUrl {
+  const ele = document.createElement('a')
+  ele.setAttribute('href', url)
+  const { protocol, host } = ele
+  return {
+    protocol,
+    host
+  }
 }
